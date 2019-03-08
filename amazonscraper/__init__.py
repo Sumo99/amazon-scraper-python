@@ -1,3 +1,4 @@
+    
 # -*- coding: utf-8 -*-
 """ This package allows you to search for products on Amazon and extract some
 useful information (title, ratings, number of reviews).
@@ -15,22 +16,21 @@ class Products(object):
         self.last_html_page = ""  # HTML content of the last scraped page
         for product_dict in product_dict_list:
             self._add_product(product_dict)
-
+    """ Append a product to the object product list
+            >>> p = Products([{'title':'Book title', 'rating': '4.2',\
+    'review_nb': '15', 'url':'http://www.amazon.com/book'}])
+            >>> p.products[1]
+            Traceback (most recent call last):
+            ...
+            IndexError: list index out of range
+            >>> p._add_product({'title':'Book title 2', 'rating': '4.3',\
+    'review_nb': '12', 'url':'http://www.amazon.com/book2'})
+            >>> len(p.products)
+            2
+            >>> print(p[1].title)
+            Book title 2
+    """
     def _add_product(self, product_dict):
-        """ Append a product to the object product list
-        >>> p = Products([{'title':'Book title', 'rating': '4.2',\
-'review_nb': '15', 'url':'http://www.amazon.com/book'}])
-        >>> p.products[1]
-        Traceback (most recent call last):
-        ...
-        IndexError: list index out of range
-        >>> p._add_product({'title':'Book title 2', 'rating': '4.3',\
-'review_nb': '12', 'url':'http://www.amazon.com/book2'})
-        >>> len(p.products)
-        2
-        >>> print(p[1].title)
-        Book title 2
-        """
         product = Product(product_dict)
         self.products.append(product)
 
@@ -49,11 +49,9 @@ class Products(object):
         >>> p.csv()
         'Product title,Rating,Number of customer reviews,\
 Product URL,Image URL,ASIN\\n"Book title",4.2,15,http://www.amazon.com/book,,A12345'
-
         >>> print(p.csv(separator=";"))
         Product title;Rating;Number of customer reviews;Product URL;Image URL;ASIN
         "Book title";4,2;15;http://www.amazon.com/book;;A12345
-
         >>> p2 = Products()
         >>> p2.csv()
         'Product title,Rating,Number of customer reviews,Product URL,Image URL,ASIN'
@@ -64,6 +62,7 @@ Product URL,Image URL,ASIN\\n"Book title",4.2,15,http://www.amazon.com/book,,A12
                                     "Number of customer reviews",
                                     "Product URL",
                                     "Image URL",
+                                    "price"
                                     "ASIN"])
         for product in self:
             rating = product.rating
@@ -76,7 +75,8 @@ Product URL,Image URL,ASIN\\n"Book title",4.2,15,http://www.amazon.com/book,,A12
                                         product.review_nb,
                                         product.url,
                                         product.img,
-                                        product.asin]))
+                                        product.asin,
+                                        product.price]))
         return csv_string
 
 
